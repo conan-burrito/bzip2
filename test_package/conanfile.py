@@ -13,5 +13,5 @@ class Bzip2TestConan(ConanFile):
     def test(self):
         assert os.path.isfile(os.path.join(self.deps_cpp_info["bzip2"].rootpath, "licenses", "LICENSE"))
 
-        if "x86" in self.settings.arch and not tools.cross_building(self.settings):
+        if not tools.cross_building(self.settings):
             self.run(os.path.join("bin", "example"), run_environment=True)
