@@ -16,7 +16,6 @@ class Bzip2Conan(ConanFile):
     license = 'BSD-style license'
     url = 'https://github.com/conan-burrito/bzip2'
 
-
     settings = 'os', 'arch', 'compiler', 'build_type'
     options = {"shared": [True, False], "fPIC": [True, False]}
     default_options = {"shared": False, "fPIC": True}

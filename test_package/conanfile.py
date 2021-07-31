@@ -1,6 +1,7 @@
 import os
 from conans import ConanFile, CMake, tools
 
+
 class Bzip2TestConan(ConanFile):
     settings = 'os', 'arch', 'compiler', 'build_type'
     generators = 'cmake'
