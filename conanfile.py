@@ -23,8 +23,6 @@ class Bzip2Conan(ConanFile):
     exports_sources = ['CMakeLists.txt']
     generators = 'cmake'
 
-    build_policy = 'missing'
-
     @property
     def _source_subfolder(self):
         return 'src'
@@ -32,22 +30,26 @@ class Bzip2Conan(ConanFile):
     def config_options(self):
         if self.settings.os == 'Windows':
             del self.options.fPIC
+        self.license = "bzip2-{}".format(self.version)
 
     def configure(self):
+        if self.options.shared:
+            del self.options.fPIC
+
         # It's a C project - remove irrelevant settings
         del self.settings.compiler.libcxx
         del self.settings.compiler.cppstd
 
     def source(self):
-        tools.get(**self.conan_data['sources'][self.version])
-        folder_name = '%s-%s' % (self.name, self.version)
-        os.rename(folder_name, self._source_subfolder)
+        tools.get(**self.conan_data["sources"][self.version], destination=self._source_subfolder, strip_root=True)
 
     def build(self):
-        major = self.version.split(".")[0]
+        for patch in self.conan_data.get("patches", {}).get(self.version, []):
+            tools.patch(**patch)
+
         cmake = CMake(self)
         cmake.definitions["BZ2_VERSION_STRING"] = self.version
-        cmake.definitions["BZ2_VERSION_MAJOR"] = major
+        cmake.definitions["BZ2_VERSION_MAJOR"] = tools.Version(self.version).major
         cmake.configure()
         cmake.build()
         cmake.install()

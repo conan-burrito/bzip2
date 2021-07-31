@@ -15,3 +15,6 @@ class Bzip2TestConan(ConanFile):
 
         if "x86" in self.settings.arch and not tools.cross_building(self.settings):
             self.run(os.path.join("bin", "example"), run_environment=True)
+
+        if self.settings.os == 'Emscripten':
+            self.run("node %s" % os.path.join("bin", "example"), run_environment=True)
